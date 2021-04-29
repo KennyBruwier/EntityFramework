@@ -118,6 +118,7 @@ namespace OefeningDataModel
                 using(ExperimentalEntities ctx = new ExperimentalEntities())
                 {
                     ctx.Persoons.Remove(ctx.Persoons.FirstOrDefault(p => p.id == selectedItem.Key));
+                    ctx.PersoonBadges.RemoveRange(ctx.PersoonBadges.Where(pb => pb.ID_Persoon == selectedItem.Key));
                     ctx.SaveChanges();
                     LoadRefresh();
                 }
@@ -179,7 +180,6 @@ namespace OefeningDataModel
                 }
             }
         }
-
         private void btPBVerwijder_Click(object sender, EventArgs e)
         {
             if ((cbBadge.Text != "") && (cbPersonen.Text != "") && ((cbBadge.SelectedItem as ComboItem) != null) && ((cbPersonen.SelectedItem as ComboItem) != null))
@@ -197,7 +197,6 @@ namespace OefeningDataModel
                 }
             }
         }
-
         private void cbBadge_MouseClick(object sender, MouseEventArgs e)
         {
             if (cbBadge.Text == "<nieuwe badge>") cbBadge.Text = "";
