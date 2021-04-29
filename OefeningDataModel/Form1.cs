@@ -11,8 +11,6 @@ using System.Windows.Forms;
 
 namespace OefeningDataModel
 {
-
-
     public partial class Form1 : Form
     {
         public Form1()
@@ -131,21 +129,24 @@ namespace OefeningDataModel
         }
         private void btBadgeBewerken_Click(object sender, EventArgs e)
         {
-            if ((cbBadge.Text != "") && (cbBadge.Text != "<nieuwe badge>") && ((cbBadge.SelectedItem as ComboItem) != null))
+            if ((cbBadge.Text != "") && (cbBadge.Text != "<nieuwe badge>"))
             {
                 Badge nieuweBadge = new Badge();
                 nieuweBadge.name = cbBadge.Text;
                 using (ExperimentalEntities ctx = new ExperimentalEntities())
                 {
-                    ctx.Badges.Add(nieuweBadge);
-                    ctx.SaveChanges();
-                    LoadRefresh();
+                    if (ctx.Badges.Where(b=>b.name == nieuweBadge.name).Count() == 0)
+                    {
+                        ctx.Badges.Add(nieuweBadge);
+                        ctx.SaveChanges();
+                        LoadRefresh();
+                    }
                 }
             }
         }
         private void btBadgeVerwijderen_Click(object sender, EventArgs e)
         {
-            if (cbBadge.Text != "")
+            if ((cbBadge.Text != "") && ((cbBadge.SelectedItem as ComboItem) != null))
             {
                 ComboItem teVerwijderen = cbBadge.SelectedItem as ComboItem;
                 using (ExperimentalEntities ctx = new ExperimentalEntities())
@@ -158,7 +159,6 @@ namespace OefeningDataModel
                 }
             }
         }
-
         private void btToewijzen_Click(object sender, EventArgs e)
         {
             if ((cbBadge.Text != "") && (cbPersonen.Text != "") && ((cbBadge.SelectedItem as ComboItem) != null))
@@ -182,7 +182,7 @@ namespace OefeningDataModel
 
         private void btPBVerwijder_Click(object sender, EventArgs e)
         {
-            if ((cbBadge.Text != "") && (cbPersonen.Text != ""))
+            if ((cbBadge.Text != "") && (cbPersonen.Text != "") && ((cbBadge.SelectedItem as ComboItem) != null) && ((cbPersonen.SelectedItem as ComboItem) != null))
             {
                 ComboItem currentBadge = cbBadge.SelectedItem as ComboItem;
                 ComboItem CurrentPersoon = cbPersonen.SelectedItem as ComboItem;
